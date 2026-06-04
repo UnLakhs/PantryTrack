@@ -1,0 +1,24 @@
+# IDE / editor
+.idea/
+.vscode/
+*.iws
+*.iml
+*.ipr
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment / local secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+
+# Build outputs
+backend/target/
+frontend/dist/
+frontend/node_modules/
