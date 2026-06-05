@@ -49,7 +49,7 @@ export async function addFoodItem(item: FoodItemRequest): Promise<FoodItem> {
     return response.json();
 }
 
-//Delete a food item by ID.
+// Delete a food item by ID.
 export async function deleteFoodItem(id: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/items/${id}`, {
         method: "DELETE",
@@ -58,5 +58,4 @@ export async function deleteFoodItem(id: number): Promise<void> {
     if (!response.ok) {
         throw new Error("Could not delete food item");
     }
-    
 }

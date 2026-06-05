@@ -4,7 +4,9 @@ import com.apostolos.backend.dto.FoodItemRequest;
 import com.apostolos.backend.dto.FoodItemResponse;
 import com.apostolos.backend.model.FoodItem;
 import com.apostolos.backend.repository.FoodItemRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -46,11 +48,12 @@ public class FoodItemService {
                 .toList();
     }
 
-    //delete a food item
+    // Delete through the service so the controller does not know repository details.
     public void deleteFoodItem(Long id) {
-        if(!foodItemRepository.existsById(id)) {
-            throw new RuntimeException("Food item not found");
+        if (!foodItemRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Food item not found");
         }
+
         foodItemRepository.deleteById(id);
     }
 

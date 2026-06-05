@@ -5,7 +5,7 @@ import FoodItemTable from "./components/FoodItemTable";
 import InventoryToolbar from "./components/InventoryToolbar";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { FoodItem, FoodItemStatus, StorageLocation } from "./data/types";
-import { getFoodItems, searchFoodItems } from "./api/food-items";
+import { deleteFoodItem, getFoodItems, searchFoodItems } from "./api/food-items";
 import { getFoodItemStatus } from "./utils/food-item-status";
 
 function App() {
@@ -87,6 +87,22 @@ function App() {
     void loadFoodItems();
   };
 
+  const handleDeleteItem = async (id: number) => {
+    const shouldDelete = window.confirm("Are you sure you want to delete this item?");
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    try {
+      await deleteFoodItem(id);
+      await loadFoodItems(searchTerm);
+    } catch (error) {
+      console.error("Error deleting food item:", error);
+      setErrorMessage("Could not delete item. Please try again.");
+    }
+  };
+
   return (
     <main className="min-h-screen bg-slate-50">
       <Header onAddItem={() => setIsFormOpen(true)} />
@@ -115,6 +131,7 @@ function App() {
             hasItems={foodItems.length > 0}
             hasActiveFilters={hasActiveFilters}
             onClearFilters={clearFilters}
+            onDeleteItem={(id) => void handleDeleteItem(id)}
           />
         </section>
 

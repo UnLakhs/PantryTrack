@@ -1,4 +1,3 @@
-import { deleteFoodItem } from "../api/food-items";
 import type { FoodItem } from "../data/types";
 import {
   foodItemStatusLabels,
@@ -13,6 +12,7 @@ interface FoodItemTableProps {
   hasItems: boolean;
   hasActiveFilters: boolean;
   onClearFilters: () => void;
+  onDeleteItem: (id: number) => void;
 }
 
 function formatLocation(storageLocation: FoodItem["storageLocation"]) {
@@ -26,19 +26,8 @@ const FoodItemTable = ({
   hasItems,
   hasActiveFilters,
   onClearFilters,
+  onDeleteItem,
 }: FoodItemTableProps) => {
-  const deleteButton = async (id: number) => {
-    if (window.confirm("Are you sure you want to delete this item?")) {
-      try {
-        await deleteFoodItem(id);
-        // Refresh the list after deletion. In a real app, consider using state management or SWR for this.
-        window.location.reload();
-      } catch (error) {
-        alert("Failed to delete item: " + error);
-      }
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="px-4 py-12 text-center">
@@ -156,7 +145,7 @@ const FoodItemTable = ({
                     Edit
                   </button>
                   <button
-                    onClick={() => deleteButton(item.id)}
+                    onClick={() => onDeleteItem(item.id)}
                     type="button"
                     className="ml-4 font-medium text-red-600 hover:text-red-800 hover:cursor-pointer"
                   >
