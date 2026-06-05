@@ -103,3 +103,22 @@ Reason:
 - `App.tsx` owns the inventory state
 - the table stays focused on display and row actions
 - deleting can reuse the same refresh path as add/edit/search
+
+## Use Netlify, Render, And Neon For Deployment
+
+The current deployment setup is:
+
+```text
+Frontend: Netlify
+Backend: Render
+Database: Neon PostgreSQL
+```
+
+Reason:
+
+- Netlify works well for Vite/React static frontend builds
+- Render can host the Spring Boot backend as a Docker web service
+- Neon provides hosted PostgreSQL with a free tier suitable for portfolio projects
+- the three-service split matches the local architecture: frontend, backend, database
+
+Use this as the default deployment setup for similar React + Spring Boot + PostgreSQL portfolio projects, unless a future project has different requirements.

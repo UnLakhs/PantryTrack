@@ -115,6 +115,18 @@ PUT /api/items/{id}
 DELETE /api/items/{id}
 ```
 
+## Deployment
+
+Current hosting setup:
+
+```text
+Frontend: Netlify
+Backend: Render
+Database: Neon PostgreSQL
+```
+
+Use the same setup as the default choice for similar React + Spring Boot + PostgreSQL portfolio projects.
+
 ## Documentation
 
 More detailed notes live in:
