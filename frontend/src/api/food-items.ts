@@ -1,8 +1,8 @@
 import type { FoodItem, FoodItemRequest } from "../data/types";
 
+// Keep the backend base URL configurable so local and deployed environments can differ.
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080/api";
 
-//fetching food items from the database
 export async function getFoodItems(): Promise<FoodItem[]> {
     const response = await fetch(`${API_BASE_URL}/items`);
 
@@ -16,6 +16,7 @@ export async function getFoodItems(): Promise<FoodItem[]> {
 export async function searchFoodItems(search: string): Promise<FoodItem[]> {
     const trimmedSearch = search.trim();
 
+    // Empty search should behave exactly like the normal inventory load.
     if (!trimmedSearch) {
         return getFoodItems();
     }

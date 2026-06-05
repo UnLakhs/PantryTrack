@@ -1,270 +1,123 @@
 # PantryTrack
 
-## Overview
+PantryTrack is a full-stack learning project for tracking food stored at home and avoiding waste from forgotten or expired items.
 
-PantryTrack is a full-stack web application that helps users manage food items stored at home and track their expiration dates.
+The app lets a user add food items, view their inventory, search by name, filter by location/status, and see dashboard statistics based on expiration dates.
 
-The goal is simple:
-
-> Know what food you have, where it is stored, and what needs to be consumed before it expires.
-
-This project is designed as a learning project using:
-
-- React
-- Tailwind CSS
-- Spring Boot
-- PostgreSQL
-
----
-
-## Problem
-
-Many people buy groceries and forget what they already have at home.
-
-This leads to:
-
-- Food waste
-- Unnecessary purchases
-- Expired products
-- Poor inventory visibility
-
-PantryTrack solves this by providing a centralized food inventory dashboard.
-
----
-
-## Core Features
-
-### Add Food Items
-
-Users can create food entries with:
-
-- Name
-- Category
-- Quantity
-- Expiration Date
-- Storage Location
-- Notes
-
-Example:
-
-- Milk
-- Chicken Breast
-- Rice
-- Eggs
-
----
-
-### View Inventory
-
-Display all stored items in a single dashboard.
-
-Each item displays:
-
-- Name
-- Quantity
-- Location
-- Expiration Date
-- Current Status
-
----
-
-### Expiration Tracking
-
-Items are automatically classified as:
-
-- Expired
-- Expires Today
-- Expiring Soon
-- Safe
-
-This status is calculated based on the current date.
-
----
-
-### Filtering
-
-Filter items by:
-
-#### Storage Location
-
-- Fridge
-- Freezer
-- Pantry
-
-#### Status
-
-- Expired
-- Expiring Soon
-- Safe
-
----
-
-### Search
-
-Search food items by name.
-
-Example:
-
-- milk
-- rice
-- chicken
-
----
-
-### Edit Items
-
-Users can update:
-
-- Quantity
-- Notes
-- Expiration Date
-- Storage Location
-
----
-
-### Delete Items
-
-Remove products that are consumed or no longer needed.
-
----
-
-## Dashboard Statistics
-
-Display useful metrics:
-
-- Total Items
-- Expired Items
-- Expiring This Week
-- Items By Location
-
----
-
-# Technical Architecture
-
-## Frontend
-
-### Stack
+## Stack
 
 - React
 - TypeScript
 - Tailwind CSS
-- Fetch API
-
-### Suggested Structure
-
-```text
-src
-├── api
-├── components
-├── pages
-├── hooks
-├── types
-└── App.tsx
-```
-
----
-
-## Backend
-
-### Stack
-
 - Spring Boot
-- Spring Web
 - Spring Data JPA
 - PostgreSQL
 
-### Suggested Structure
+## Current Features
+
+- Add food items from the frontend modal
+- Store food items in PostgreSQL
+- View inventory in a table
+- Search food items by name
+- Filter items by storage location
+- Filter items by expiration status
+- Show dashboard stats from the same inventory data used by the table
+- Basic CORS setup for Vite frontend and Spring Boot backend
+
+## Project Structure
 
 ```text
-controller
-service
-repository
-model
-dto
-exception
-config
+PantryTrack
+|-- backend
+|   `-- src/main/java/com/apostolos/backend
+|       |-- config
+|       |-- controller
+|       |-- dto
+|       |-- model
+|       |-- repository
+|       `-- service
+|-- frontend
+|   `-- src
+|       |-- api
+|       |-- components
+|       |-- data
+|       `-- utils
+`-- docs
 ```
 
----
+## Backend Setup
 
-## Database
+Create the PostgreSQL database:
 
-### Table: food_items
+```sql
+CREATE DATABASE pantrytrack;
+```
 
-Fields:
+The shared backend config lives in:
 
-- id
-- name
-- category
-- quantity
-- expiration_date
-- storage_location
-- notes
-- created_at
-- updated_at
+```text
+backend/src/main/resources/application.properties
+```
 
----
+Local secrets can go in:
+
+```text
+backend/src/main/resources/application-local.properties
+```
+
+That file is ignored by Git.
+
+Run the backend:
+
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+
+On Windows PowerShell:
+
+```powershell
+cd backend
+.\mvnw.cmd spring-boot:run
+```
+
+## Frontend Setup
+
+Run the frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend expects the backend API at:
+
+```text
+http://localhost:8080/api
+```
+
+You can override this with a Vite environment variable:
+
+```env
+VITE_API_BASE_URL=http://localhost:8080/api
+```
 
 ## API Endpoints
 
-### GET
-
 ```http
 GET /api/items
-GET /api/items/{id}
-```
-
-### POST
-
-```http
+GET /api/items/search?search=milk
 POST /api/items
 ```
 
-### PUT
+## Documentation
 
-```http
-PUT /api/items/{id}
-```
+More detailed notes live in:
 
-### DELETE
+- [Frontend Notes](docs/frontend.md)
+- [Backend Notes](docs/backend.md)
+- [Architecture Notes](docs/architecture.md)
+- [Decision Log](docs/decisions.md)
 
-```http
-DELETE /api/items/{id}
-```
-
-### Filters
-
-```http
-GET /api/items?status=EXPIRED
-GET /api/items?location=FRIDGE
-GET /api/items?search=milk
-```
-
----
-
-## Learning Goals
-
-This project is intended to practice:
-
-- Spring Boot Architecture
-- Controllers
-- Services
-- Repositories
-- Dependency Injection
-- DTOs
-- Validation
-- PostgreSQL Integration
-- React API Communication
-- CRUD Operations
-- Tailwind UI Development
-
----
-
-## Future Improvements
-
-- Authentication & Authorization
-- User Accounts
-- Email Notifications
-- Barcode Scanning
-- Shopping List Generation
-- Mobile Responsive Dashboard
+These docs explain how the app is currently wired and why certain choices were made.

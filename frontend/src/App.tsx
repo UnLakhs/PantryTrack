@@ -17,6 +17,7 @@ function App() {
   const [locationFilter, setLocationFilter] = useState<"ALL" | StorageLocation>("ALL");
   const [statusFilter, setStatusFilter] = useState<"ALL" | FoodItemStatus>("ALL");
 
+  // This is the single inventory refresh path used by search and by the add-item modal.
   const loadFoodItems = useCallback(async (search = "") => {
     setIsLoading(true);
 
@@ -58,11 +59,13 @@ function App() {
 
     void loadInitialFoodItems();
 
+    // Avoid setting state if the component unmounts before the request finishes.
     return () => {
       ignore = true;
     };
   }, []);
 
+  // Location and status filters are derived from the loaded/search result set.
   const filteredFoodItems = useMemo(() => {
     return foodItems.filter((item) => {
       const matchesLocation =

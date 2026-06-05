@@ -30,12 +30,14 @@ public class FoodItem {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    // Let JPA fill timestamps automatically when the entity is first saved.
     @PrePersist
     public void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
+    // Only updatedAt changes on later database updates.
     @PreUpdate
     public void onUpdate() {
         updatedAt = LocalDateTime.now();

@@ -26,6 +26,7 @@ public class FoodItemService {
     public FoodItemResponse addFoodItem(FoodItemRequest request) {
         FoodItem foodItem = new FoodItem();
 
+        // Convert the API request DTO into the JPA entity that will be saved.
         foodItem.setName(request.name());
         foodItem.setCategory(request.category());
         foodItem.setQuantity(request.quantity());
@@ -38,7 +39,6 @@ public class FoodItemService {
         return mapToResponse(savedFoodItem);
     }
 
-    //search
     public List<FoodItemResponse> searchFoodItems(String search) {
         return foodItemRepository.findByNameContainingIgnoreCase(search)
                 .stream()

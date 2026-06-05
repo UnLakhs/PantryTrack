@@ -21,6 +21,7 @@ const FoodItemFormModal = ({ onClose, onItemAdded }: FoodItemFormModalProps) => 
         const form = e.currentTarget;
         const formData = new FormData(form);
 
+        // This form is simple enough to read as FormData instead of controlling every input.
         const foodItem: FoodItemRequest = {
             name: String(formData.get("name")),
             category: String(formData.get("category")),
@@ -35,13 +36,13 @@ const FoodItemFormModal = ({ onClose, onItemAdded }: FoodItemFormModalProps) => 
             await onItemAdded();
             form.reset();
             setSuccessMessage("Food item added successfully.");
-        } catch(error) {
+        } catch (error) {
             console.error("Error submitting form:", error);
             setErrorMessage("Could not add food item. Check the fields and try again.");
         } finally {
             setIsSubmitting(false);
         }
-    }
+    };
 
     return (
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-950/40 px-4 py-8 sm:items-center">
@@ -155,7 +156,7 @@ const FoodItemFormModal = ({ onClose, onItemAdded }: FoodItemFormModalProps) => 
                 </form>
             </section>
         </div>
-    )
-}
+    );
+};
 
 export default FoodItemFormModal;

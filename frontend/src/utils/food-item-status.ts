@@ -12,6 +12,7 @@ export const foodItemStatusStyles: Record<FoodItemStatus, string> = {
     SAFE: "bg-emerald-100 text-emerald-800",
 };
 
+// Status is derived from the expiration date instead of stored, because it changes over time.
 export function getFoodItemStatus(expirationDate: string): FoodItemStatus {
     const today = new Date();
     const expiresAt = new Date(`${expirationDate}T00:00:00`);

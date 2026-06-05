@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
+// Request DTO: fields the frontend is allowed to send when creating a food item.
 public record FoodItemRequest(
         @NotBlank(message = "Name is required")
         String name,

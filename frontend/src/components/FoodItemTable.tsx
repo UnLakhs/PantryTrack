@@ -46,6 +46,7 @@ const FoodItemTable = ({
 
   if (foodItems.length === 0) {
     if (hasItems && hasActiveFilters) {
+      // There are items in the system, but the active search/filter combination hides them.
       return (
         <div className="px-4 py-12 text-center">
           <p className="text-sm font-semibold text-slate-900">No items match your current filters</p>
