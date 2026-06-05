@@ -16,6 +16,8 @@ The app lets a user add food items, view their inventory, search by name, filter
 ## Current Features
 
 - Add food items from the frontend modal
+- Edit food items from the same modal
+- Delete food items from the inventory table
 - Store food items in PostgreSQL
 - View inventory in a table
 - Search food items by name
@@ -109,6 +111,8 @@ VITE_API_BASE_URL=http://localhost:8080/api
 GET /api/items
 GET /api/items/search?search=milk
 POST /api/items
+PUT /api/items/{id}
+DELETE /api/items/{id}
 ```
 
 ## Documentation

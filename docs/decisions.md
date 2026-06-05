@@ -70,7 +70,7 @@ If the inventory grows or filtering becomes more complex, move filters into back
 
 ## Use FormData In The Modal
 
-The add-item modal reads form values using `FormData`.
+The add/edit modal reads form values using `FormData`.
 
 Reason:
 
@@ -79,3 +79,27 @@ Reason:
 - works well for uncontrolled forms
 
 If the form later needs live validation, dependent fields, or complex UI behavior, controlled inputs may be a better fit.
+
+## Reuse The Modal For Add And Edit
+
+`FoodItemFormModal` handles both creating and editing food items.
+
+Reason:
+
+- add and edit use the same fields
+- one modal keeps styling and validation behavior consistent
+- the frontend already has the selected item in `foodItems` state
+
+For editing, the table passes the whole `FoodItem` to `App.tsx`, and `App.tsx` passes it to the modal as `itemToEdit`.
+
+The modal does not fetch `GET /api/items/{id}` before editing yet. That can be added later if the app needs always-fresh data from the database before opening the form.
+
+## Keep Delete In App State Flow
+
+`FoodItemTable` exposes `onDeleteItem(id)`, but `App.tsx` calls the API and refreshes inventory.
+
+Reason:
+
+- `App.tsx` owns the inventory state
+- the table stays focused on display and row actions
+- deleting can reuse the same refresh path as add/edit/search

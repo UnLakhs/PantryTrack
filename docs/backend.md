@@ -90,8 +90,18 @@ The frontend receives response DTOs, not JPA entities.
 
 - get all items
 - add one item
+- update one item
+- delete one item
 - search by name
 - map `FoodItem` entities to `FoodItemResponse` DTOs
+
+`addFoodItem` and `updateFoodItem` both use the same internal mapping helper:
+
+```java
+applyRequestToEntity(request, foodItem)
+```
+
+This keeps the field-copying logic in one place.
 
 ## Controller
 
@@ -101,9 +111,15 @@ Current endpoints:
 GET /api/items
 GET /api/items/search?search=milk
 POST /api/items
+PUT /api/items/{id}
+DELETE /api/items/{id}
 ```
 
 Controllers should stay thin: they receive HTTP requests, call services, and return DTO responses.
+
+`DELETE /api/items/{id}` returns `204 No Content` when deletion succeeds.
+
+Update/delete operations return `404 Not Found` if the item id does not exist.
 
 ## Local Database Config
 

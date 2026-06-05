@@ -75,3 +75,33 @@ FoodItemRepository.save
   |
 PostgreSQL
 ```
+
+The normal request flow for editing an item is:
+
+```text
+PUT /api/items/{id}
+  |
+FoodItemController.updateFoodItem
+  |
+FoodItemService.updateFoodItem
+  |
+FoodItemRepository.findById
+  |
+FoodItemRepository.save
+  |
+PostgreSQL
+```
+
+The normal request flow for deleting an item is:
+
+```text
+DELETE /api/items/{id}
+  |
+FoodItemController.deleteFoodItem
+  |
+FoodItemService.deleteFoodItem
+  |
+FoodItemRepository.deleteById
+  |
+PostgreSQL
+```

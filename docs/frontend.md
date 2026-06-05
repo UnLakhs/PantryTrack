@@ -33,6 +33,8 @@ Current API helpers:
 getFoodItems
 searchFoodItems
 addFoodItem
+updateFoodItem
+deleteFoodItem
 ```
 
 Components should prefer these helpers instead of writing `fetch` inline.
@@ -79,14 +81,23 @@ EXPIRING_SOON
 SAFE
 ```
 
-## Modal Submit Flow
+## Add/Edit Modal Flow
 
 `FoodItemFormModal` uses `FormData` to read uncontrolled form fields.
 
-On successful submit:
+The same modal handles both add and edit:
 
 ```text
-addFoodItem
+itemToEdit is null      -> POST /api/items
+itemToEdit has an item  -> PUT /api/items/{id}
+```
+
+When editing, `App.tsx` passes the existing `FoodItem` from state into the modal. The modal fills fields with `defaultValue`, so it does not need a separate `GET /api/items/{id}` request.
+
+On successful save:
+
+```text
+addFoodItem/updateFoodItem
   |
 App reloads foodItems
   |
@@ -94,3 +105,19 @@ Table and stats refresh
 ```
 
 The modal displays local success/failure messages.
+
+## Delete Flow
+
+Delete starts in the table, but the API call lives in `App.tsx`.
+
+```text
+FoodItemTable Delete click
+  |
+App.handleDeleteItem(id)
+  |
+deleteFoodItem(id)
+  |
+App reloads foodItems
+```
+
+This keeps `FoodItemTable` focused on rendering rows and actions, while `App.tsx` remains the owner of inventory state.
