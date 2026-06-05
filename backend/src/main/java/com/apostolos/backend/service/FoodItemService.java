@@ -46,6 +46,14 @@ public class FoodItemService {
                 .toList();
     }
 
+    //delete a food item
+    public void deleteFoodItem(Long id) {
+        if(!foodItemRepository.existsById(id)) {
+            throw new RuntimeException("Food item not found");
+        }
+        foodItemRepository.deleteById(id);
+    }
+
     // Keep API responses separate from the JPA entity shape.
     private FoodItemResponse mapToResponse(FoodItem foodItem) {
         return new FoodItemResponse(

@@ -13,6 +13,7 @@ export async function getFoodItems(): Promise<FoodItem[]> {
     return response.json();
 }
 
+// Search for food items based on a search term.
 export async function searchFoodItems(search: string): Promise<FoodItem[]> {
     const trimmedSearch = search.trim();
 
@@ -46,4 +47,16 @@ export async function addFoodItem(item: FoodItemRequest): Promise<FoodItem> {
     }
 
     return response.json();
+}
+
+//Delete a food item by ID.
+export async function deleteFoodItem(id: number): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/items/${id}`, {
+        method: "DELETE",
+    });
+
+    if (!response.ok) {
+        throw new Error("Could not delete food item");
+    }
+    
 }

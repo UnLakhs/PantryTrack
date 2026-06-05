@@ -1,3 +1,4 @@
+import { deleteFoodItem } from "../api/food-items";
 import type { FoodItem } from "../data/types";
 import {
   foodItemStatusLabels,
@@ -26,11 +27,27 @@ const FoodItemTable = ({
   hasActiveFilters,
   onClearFilters,
 }: FoodItemTableProps) => {
+  const deleteButton = async (id: number) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      try {
+        await deleteFoodItem(id);
+        // Refresh the list after deletion. In a real app, consider using state management or SWR for this.
+        window.location.reload();
+      } catch (error) {
+        alert("Failed to delete item: " + error);
+      }
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="px-4 py-12 text-center">
-        <p className="text-sm font-medium text-slate-700">Loading inventory...</p>
-        <p className="mt-1 text-sm text-slate-500">Fetching items from the backend.</p>
+        <p className="text-sm font-medium text-slate-700">
+          Loading inventory...
+        </p>
+        <p className="mt-1 text-sm text-slate-500">
+          Fetching items from the backend.
+        </p>
       </div>
     );
   }
@@ -39,7 +56,9 @@ const FoodItemTable = ({
     return (
       <div className="px-4 py-12 text-center">
         <p className="text-sm font-semibold text-red-700">{errorMessage}</p>
-        <p className="mt-1 text-sm text-slate-500">The table will appear here once data is available.</p>
+        <p className="mt-1 text-sm text-slate-500">
+          The table will appear here once data is available.
+        </p>
       </div>
     );
   }
@@ -49,7 +68,9 @@ const FoodItemTable = ({
       // There are items in the system, but the active search/filter combination hides them.
       return (
         <div className="px-4 py-12 text-center">
-          <p className="text-sm font-semibold text-slate-900">No items match your current filters</p>
+          <p className="text-sm font-semibold text-slate-900">
+            No items match your current filters
+          </p>
           <p className="mt-1 text-sm text-slate-500">
             Try changing the search, location, or status filters.
           </p>
@@ -66,8 +87,12 @@ const FoodItemTable = ({
 
     return (
       <div className="px-4 py-12 text-center">
-        <p className="text-sm font-semibold text-slate-900">No food items yet</p>
-        <p className="mt-1 text-sm text-slate-500">Add your first item to start tracking your pantry.</p>
+        <p className="text-sm font-semibold text-slate-900">
+          No food items yet
+        </p>
+        <p className="mt-1 text-sm text-slate-500">
+          Add your first item to start tracking your pantry.
+        </p>
       </div>
     );
   }
@@ -117,20 +142,23 @@ const FoodItemTable = ({
                   {item.expirationDate}
                 </td>
                 <td className="whitespace-nowrap px-4 py-4">
-                  <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${foodItemStatusStyles[status]}`}>
+                  <span
+                    className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${foodItemStatusStyles[status]}`}
+                  >
                     {foodItemStatusLabels[status]}
                   </span>
                 </td>
                 <td className="whitespace-nowrap px-4 py-4 text-right text-sm">
                   <button
                     type="button"
-                    className="font-medium text-emerald-700 hover:text-emerald-900"
+                    className="font-medium text-emerald-700 hover:text-emerald-900 hover:cursor-pointer"
                   >
                     Edit
                   </button>
                   <button
+                    onClick={() => deleteButton(item.id)}
                     type="button"
-                    className="ml-4 font-medium text-red-600 hover:text-red-800"
+                    className="ml-4 font-medium text-red-600 hover:text-red-800 hover:cursor-pointer"
                   >
                     Delete
                   </button>

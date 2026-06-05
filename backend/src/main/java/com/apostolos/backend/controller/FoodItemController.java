@@ -4,6 +4,7 @@ import com.apostolos.backend.dto.FoodItemRequest;
 import com.apostolos.backend.dto.FoodItemResponse;
 import com.apostolos.backend.service.FoodItemService;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,5 +33,11 @@ public class FoodItemController {
     @GetMapping("/search")
     public List<FoodItemResponse> searchFoodItem(@RequestParam String search) {
         return foodItemService.searchFoodItems(search);
+    }
+
+
+    @DeleteMapping("/{id}")
+    public void deleteFoodItem(@PathVariable Long id) {
+        foodItemService.deleteFoodItem(id);
     }
 }
