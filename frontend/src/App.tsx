@@ -3,9 +3,10 @@ import DashboardStats from "./components/DashboardStats";
 import FoodItemFormModal from "./components/FoodItemFormModal";
 import FoodItemTable from "./components/FoodItemTable";
 import InventoryToolbar from "./components/InventoryToolbar";
-import { useCallback, useEffect, useState } from "react";
-import type { FoodItem } from "./data/types";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { FoodItem, FoodItemStatus, StorageLocation } from "./data/types";
 import { getFoodItems, searchFoodItems } from "./api/food-items";
+import { getFoodItemStatus } from "./utils/food-item-status";
 
 function App() {
   const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
@@ -13,6 +14,8 @@ function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [locationFilter, setLocationFilter] = useState<"ALL" | StorageLocation>("ALL");
+  const [statusFilter, setStatusFilter] = useState<"ALL" | FoodItemStatus>("ALL");
 
   const loadFoodItems = useCallback(async (search = "") => {
     setIsLoading(true);
@@ -60,26 +63,55 @@ function App() {
     };
   }, []);
 
+  const filteredFoodItems = useMemo(() => {
+    return foodItems.filter((item) => {
+      const matchesLocation =
+        locationFilter === "ALL" || item.storageLocation === locationFilter;
+      const matchesStatus =
+        statusFilter === "ALL" || getFoodItemStatus(item.expirationDate) === statusFilter;
+
+      return matchesLocation && matchesStatus;
+    });
+  }, [foodItems, locationFilter, statusFilter]);
+
+  const hasActiveFilters =
+    searchTerm.trim() !== "" || locationFilter !== "ALL" || statusFilter !== "ALL";
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setLocationFilter("ALL");
+    setStatusFilter("ALL");
+    void loadFoodItems();
+  };
+
   return (
     <main className="min-h-screen bg-slate-50">
       <Header onAddItem={() => setIsFormOpen(true)} />
       <div className="mx-auto max-w-6xl px-6 py-8 lg:px-8">
-        <DashboardStats />
+        <DashboardStats foodItems={filteredFoodItems} />
 
         <section className="mt-8 rounded-lg border border-slate-200 bg-white shadow-sm">
           <InventoryToolbar
             searchTerm={searchTerm}
+            locationFilter={locationFilter}
+            statusFilter={statusFilter}
             onSearchTermChange={setSearchTerm}
+            onLocationFilterChange={setLocationFilter}
+            onStatusFilterChange={setStatusFilter}
             onSearchSubmit={() => loadFoodItems(searchTerm)}
             onClearSearch={() => {
               setSearchTerm("");
               void loadFoodItems();
             }}
+            onClearFilters={clearFilters}
           />
           <FoodItemTable
-            foodItems={foodItems}
+            foodItems={filteredFoodItems}
             isLoading={isLoading}
             errorMessage={errorMessage}
+            hasItems={foodItems.length > 0}
+            hasActiveFilters={hasActiveFilters}
+            onClearFilters={clearFilters}
           />
         </section>
 
