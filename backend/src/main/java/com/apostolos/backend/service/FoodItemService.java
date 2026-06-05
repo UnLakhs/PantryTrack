@@ -38,6 +38,14 @@ public class FoodItemService {
         return mapToResponse(savedFoodItem);
     }
 
+    //search
+    public List<FoodItemResponse> searchFoodItems(String search) {
+        return foodItemRepository.findByNameContainingIgnoreCase(search)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
     // Keep API responses separate from the JPA entity shape.
     private FoodItemResponse mapToResponse(FoodItem foodItem) {
         return new FoodItemResponse(

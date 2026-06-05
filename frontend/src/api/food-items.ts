@@ -13,6 +13,23 @@ export async function getFoodItems(): Promise<FoodItem[]> {
     return response.json();
 }
 
+export async function searchFoodItems(search: string): Promise<FoodItem[]> {
+    const trimmedSearch = search.trim();
+
+    if (!trimmedSearch) {
+        return getFoodItems();
+    }
+
+    const params = new URLSearchParams({ search: trimmedSearch });
+    const response = await fetch(`${API_BASE_URL}/items/search?${params.toString()}`);
+
+    if (!response.ok) {
+        throw new Error("Could not search food items");
+    }
+
+    return response.json();
+}
+
 // Send only the fields required to create a food item; the backend returns id/timestamps.
 export async function addFoodItem(item: FoodItemRequest): Promise<FoodItem> {
     const response = await fetch(`${API_BASE_URL}/items`, {

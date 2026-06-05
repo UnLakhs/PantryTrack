@@ -5,17 +5,20 @@ import FoodItemTable from "./components/FoodItemTable";
 import InventoryToolbar from "./components/InventoryToolbar";
 import { useCallback, useEffect, useState } from "react";
 import type { FoodItem } from "./data/types";
-import { getFoodItems } from "./api/food-items";
+import { getFoodItems, searchFoodItems } from "./api/food-items";
 
 function App() {
   const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const loadFoodItems = useCallback(async () => {
+  const loadFoodItems = useCallback(async (search = "") => {
+    setIsLoading(true);
+
     try {
-      const data = await getFoodItems();
+      const data = search.trim() ? await searchFoodItems(search) : await getFoodItems();
       setFoodItems(data);
       setErrorMessage("");
     } catch (error) {
@@ -64,7 +67,15 @@ function App() {
         <DashboardStats />
 
         <section className="mt-8 rounded-lg border border-slate-200 bg-white shadow-sm">
-          <InventoryToolbar />
+          <InventoryToolbar
+            searchTerm={searchTerm}
+            onSearchTermChange={setSearchTerm}
+            onSearchSubmit={() => loadFoodItems(searchTerm)}
+            onClearSearch={() => {
+              setSearchTerm("");
+              void loadFoodItems();
+            }}
+          />
           <FoodItemTable
             foodItems={foodItems}
             isLoading={isLoading}
@@ -75,7 +86,7 @@ function App() {
         {isFormOpen && (
           <FoodItemFormModal
             onClose={() => setIsFormOpen(false)}
-            onItemAdded={loadFoodItems}
+            onItemAdded={() => loadFoodItems(searchTerm)}
           />
         )}
       </div>
