@@ -49,6 +49,23 @@ export async function addFoodItem(item: FoodItemRequest): Promise<FoodItem> {
     return response.json();
 }
 
+// Update an existing food item by sending the edited fields to the backend.
+export async function updateFoodItem(id: number, item: FoodItemRequest): Promise<FoodItem> {
+    const response = await fetch(`${API_BASE_URL}/items/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(item),
+    });
+
+    if (!response.ok) {
+        throw new Error("Could not update food item");
+    }
+
+    return response.json();
+}
+
 // Delete a food item by ID.
 export async function deleteFoodItem(id: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/items/${id}`, {

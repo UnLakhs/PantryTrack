@@ -29,12 +29,7 @@ public class FoodItemService {
         FoodItem foodItem = new FoodItem();
 
         // Convert the API request DTO into the JPA entity that will be saved.
-        foodItem.setName(request.name());
-        foodItem.setCategory(request.category());
-        foodItem.setQuantity(request.quantity());
-        foodItem.setExpirationDate(request.expirationDate());
-        foodItem.setStorageLocation(request.storageLocation());
-        foodItem.setNotes(request.notes());
+        applyRequestToEntity(request, foodItem);
 
         FoodItem savedFoodItem = foodItemRepository.save(foodItem);
 
@@ -48,6 +43,17 @@ public class FoodItemService {
                 .toList();
     }
 
+    public FoodItemResponse updateFoodItem(Long id, FoodItemRequest request) {
+        FoodItem foodItem = foodItemRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Food item not found"));
+
+        applyRequestToEntity(request, foodItem);
+
+        FoodItem savedFoodItem = foodItemRepository.save(foodItem);
+
+        return mapToResponse(savedFoodItem);
+    }
+
     // Delete through the service so the controller does not know repository details.
     public void deleteFoodItem(Long id) {
         if (!foodItemRepository.existsById(id)) {
@@ -55,6 +61,15 @@ public class FoodItemService {
         }
 
         foodItemRepository.deleteById(id);
+    }
+
+    private void applyRequestToEntity(FoodItemRequest request, FoodItem foodItem) {
+        foodItem.setName(request.name());
+        foodItem.setCategory(request.category());
+        foodItem.setQuantity(request.quantity());
+        foodItem.setExpirationDate(request.expirationDate());
+        foodItem.setStorageLocation(request.storageLocation());
+        foodItem.setNotes(request.notes());
     }
 
     // Keep API responses separate from the JPA entity shape.

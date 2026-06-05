@@ -29,6 +29,11 @@ public class FoodItemController {
         return foodItemService.addFoodItem(request);
     }
 
+    @PutMapping("/{id}")
+    public FoodItemResponse updateFoodItem(@PathVariable Long id, @Valid @RequestBody FoodItemRequest request) {
+        return foodItemService.updateFoodItem(id, request);
+    }
+
     @GetMapping("/search")
     public List<FoodItemResponse> searchFoodItem(@RequestParam String search) {
         return foodItemService.searchFoodItems(search);

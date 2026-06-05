@@ -13,6 +13,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<FoodItem | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState<"ALL" | StorageLocation>("ALL");
   const [statusFilter, setStatusFilter] = useState<"ALL" | FoodItemStatus>("ALL");
@@ -103,9 +104,24 @@ function App() {
     }
   };
 
+  const openAddItemModal = () => {
+    setEditingItem(null);
+    setIsFormOpen(true);
+  };
+
+  const closeFormModal = () => {
+    setIsFormOpen(false);
+    setEditingItem(null);
+  };
+
+  const handleEditItem = (item: FoodItem) => {
+    setEditingItem(item);
+    setIsFormOpen(true);
+  };
+
   return (
     <main className="min-h-screen bg-slate-50">
-      <Header onAddItem={() => setIsFormOpen(true)} />
+      <Header onAddItem={openAddItemModal} />
       <div className="mx-auto max-w-6xl px-6 py-8 lg:px-8">
         <DashboardStats foodItems={filteredFoodItems} />
 
@@ -132,13 +148,15 @@ function App() {
             hasActiveFilters={hasActiveFilters}
             onClearFilters={clearFilters}
             onDeleteItem={(id) => void handleDeleteItem(id)}
+            onEditItem={handleEditItem}
           />
         </section>
 
         {isFormOpen && (
           <FoodItemFormModal
-            onClose={() => setIsFormOpen(false)}
-            onItemAdded={() => loadFoodItems(searchTerm)}
+            itemToEdit={editingItem}
+            onClose={closeFormModal}
+            onItemSaved={() => loadFoodItems(searchTerm)}
           />
         )}
       </div>

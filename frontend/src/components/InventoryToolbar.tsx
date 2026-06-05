@@ -49,7 +49,7 @@ const InventoryToolbar = ({
 
                 <button
                     type="submit"
-                    className="h-10 rounded-md bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+                    className="h-10 rounded-md bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 hover:cursor-pointer"
                 >
                     Search
                 </button>

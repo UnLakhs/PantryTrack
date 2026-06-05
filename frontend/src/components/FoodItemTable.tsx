@@ -13,6 +13,7 @@ interface FoodItemTableProps {
   hasActiveFilters: boolean;
   onClearFilters: () => void;
   onDeleteItem: (id: number) => void;
+  onEditItem: (item: FoodItem) => void;
 }
 
 function formatLocation(storageLocation: FoodItem["storageLocation"]) {
@@ -27,6 +28,7 @@ const FoodItemTable = ({
   hasActiveFilters,
   onClearFilters,
   onDeleteItem,
+  onEditItem,
 }: FoodItemTableProps) => {
   if (isLoading) {
     return (
@@ -140,6 +142,7 @@ const FoodItemTable = ({
                 <td className="whitespace-nowrap px-4 py-4 text-right text-sm">
                   <button
                     type="button"
+                    onClick={() => onEditItem(item)}
                     className="font-medium text-emerald-700 hover:text-emerald-900 hover:cursor-pointer"
                   >
                     Edit
