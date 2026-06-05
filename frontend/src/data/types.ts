@@ -9,3 +9,12 @@ export type FoodItem = {
     createdAt: string;
     updatedAt: string;
 }
+
+export type FoodItemRequest = {
+    name: string;
+    category: string;
+    quantity: string;
+    expirationDate: string;
+    storageLocation: "FRIDGE" | "FREEZER" | "PANTRY";
+    notes?: string;
+}

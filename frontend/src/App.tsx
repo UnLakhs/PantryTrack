@@ -3,7 +3,7 @@ import DashboardStats from "./components/DashboardStats";
 import FoodItemFormModal from "./components/FoodItemFormModal";
 import FoodItemTable from "./components/FoodItemTable";
 import InventoryToolbar from "./components/InventoryToolbar";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { FoodItem } from "./data/types";
 import { getFoodItems } from "./api/food-items";
 
@@ -11,26 +11,55 @@ function App() {
   const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const loadFoodItems = useCallback(async () => {
+    try {
+      const data = await getFoodItems();
+      setFoodItems(data);
+      setErrorMessage("");
+    } catch (error) {
+      console.error("Error fetching food items:", error);
+      setErrorMessage("Could not load inventory. Check that the backend is running.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    async function loadFoodItems() {
+    let ignore = false;
+
+    async function loadInitialFoodItems() {
       try {
         const data = await getFoodItems();
-        setFoodItems(data);
+
+        if (!ignore) {
+          setFoodItems(data);
+          setErrorMessage("");
+        }
       } catch (error) {
         console.error("Error fetching food items:", error);
-        setErrorMessage("Could not load inventory. Check that the backend is running.");
+
+        if (!ignore) {
+          setErrorMessage("Could not load inventory. Check that the backend is running.");
+        }
       } finally {
-        setIsLoading(false);
+        if (!ignore) {
+          setIsLoading(false);
+        }
       }
     }
 
-    loadFoodItems();
+    void loadInitialFoodItems();
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   return (
     <main className="min-h-screen bg-slate-50">
-      <Header />
+      <Header onAddItem={() => setIsFormOpen(true)} />
       <div className="mx-auto max-w-6xl px-6 py-8 lg:px-8">
         <DashboardStats />
 
@@ -43,7 +72,12 @@ function App() {
           />
         </section>
 
-        <FoodItemFormModal />
+        {isFormOpen && (
+          <FoodItemFormModal
+            onClose={() => setIsFormOpen(false)}
+            onItemAdded={loadFoodItems}
+          />
+        )}
       </div>
     </main>
   );
